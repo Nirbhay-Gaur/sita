@@ -4,9 +4,9 @@
 #
 # Author - Nirbhay Gaur
 # 
-# Description - #TODO
+# Description - An awesome tool to organize your day to day tasks with very easy to use interface.
 #
-# Error Log - Any errors associated with the script can be found in /path/to/logfile #TODO
+# Error Log - Any errors associated with the script can be found in /path/to/logfile
 #
 
 ### CONSTANTS ###
@@ -22,34 +22,6 @@ replace_text=
 opt=
 
 ### FUNCTIONS ###
-
-#init() 
-#{   
-#    clear
-#    echo "Intializing the environment..."
-#    sleep 2
-#    clear
-#    echo "Waking up the minions..."
-#    sleep 2
-#    clear
-#    echo "Please wait while the minions do their work..."
-#    sleep 2 
-#    clear 
-#    echo "Doing heavy lifting..."
-#    sleep 2
-#    clear
-#    echo "Grabbing extra minions..."
-#    sleep 2
-#    clear
-#    echo "We're working very hard...Really!"
-#    sleep 3
-#    clear
-#    echo "BANANA!!!"
-#    sleep 2
-#    clear 
-#    echo -e "Hello ${USER^}\n"
-#    touch $DATA_FILE
-#}
 
 confirm()
 {
