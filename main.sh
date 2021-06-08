@@ -58,13 +58,18 @@ confirm()
 
 add()
 {
-    if [ -n "$task" ]; then
-        echo "$task" >> $DATA_FILE
-    else
-        read -p "Enter task: " task
-        echo "$task" >> $DATA_FILE
+   if [ -f $DATA_FILE ]; then
+        if [ -n "$task" ]; then
+            echo "$task" >> $DATA_FILE
+        else
+            read -p "Enter task: " task
+            echo "$task" >> $DATA_FILE
+        fi
+        echo "$task - has been added to your list."
+    else 
+        echo -e "minions found an abnormality.\nRun sita -i to initiate the tool."
     fi
-    echo "$task - has been added to your list."
+    
 }
 
 delete()
@@ -89,13 +94,16 @@ delete()
         fi
     }
     
-    if [ -n "$_id" ]; then
-        delete_check
-    else
-        read -p "Enter ID of the task: " _id
-        delete_check
+    if [ -f $DATA_FILE ]; then
+        if [ -n "$_id" ]; then
+            delete_check
+        else
+            read -p "Enter ID of the task: " _id
+            delete_check
+        fi
+    else 
+        echo -e "minions found an abnormality.\nRun sita -i to initiate the tool."
     fi
-
 }
 
 edit()
@@ -110,6 +118,8 @@ edit()
                 else 
                     echo "Nothing's changed, You are still an ugly bitch."
                 fi
+            elif [ $(wc -l < $DATA_FILE) -eq "0" ]; then
+                echo -e "Your list is empty!\nYou need to add task to edit them, stoopid!"
             else
                 echo "Entered id does not match"
             fi
@@ -118,12 +128,16 @@ edit()
         fi
     }
 
-    if [ -n "$_id" ]; then
-        edit_check
+    if [ -f $DATA_FILE ]; then
+        if [ -n "$_id" ]; then
+            edit_check
+        else 
+            read -p "Enter ID of the task: " _id
+            read -p "Enter updated task: " replace_text
+            edit_check
+        fi
     else 
-        read -p "Enter ID of the task: " _id
-        read -p "Enter updated task: " replace_text
-        edit_check
+        echo -e "minions found an abnormality.\nRun sita -i to initiate the tool."
     fi
 }
 
@@ -137,7 +151,7 @@ list()
             cat -n $DATA_FILE
         fi
     else 
-        echo "minions found an abnormality. Run sita -i to initiate the tool."
+        echo -e "minions found an abnormality.\nRun sita -i to initiate the tool."
     fi
 }
 
