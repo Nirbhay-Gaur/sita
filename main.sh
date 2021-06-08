@@ -113,7 +113,7 @@ edit()
 
 list()
 {
- echo "TODO"
+    echo "#TODO"
 }
 
 usage()
@@ -134,10 +134,11 @@ _EOF_
 }
 
 ### MAIN ###
-#if [ -z "$1" ]; then
+
+if [ -z "$1" ]; then
 #    init
-#    usage
-#fi    
+    usage
+fi    
 
 while [ "$1" != "" ]; do
     case $1 in
@@ -160,7 +161,8 @@ while [ "$1" != "" ]; do
         -h | --help )           usage
                                 exit
                                 ;;
-        -l | --list )           : #do something
+        -l | --list )           list
+                                exit
                                 ;;
         * )                     usage
                                 exit 1 
