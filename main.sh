@@ -6,14 +6,10 @@
 # 
 # Description - An awesome tool to organize your day to day tasks with very easy to use interface.
 #
-# Error Log - Any errors associated with the script can be found in /path/to/logfile
-#
 
 ### CONSTANTS ###
 PROGNAME="$(basename $0)"
 DATA_FILE="$HOME/.sita/.$PROGNAME.data_file"
-EXCODE="$?"
-#RIGHT_NOW="$(date +"%x %r")"
 
 ### VARIABLES ###
 task=
@@ -40,10 +36,10 @@ init()
              echo "$i"
              sleep 4
          done
-         if [ ! -d $HOME/.sita ]; then
-             mkdir -p $HOME/.sita   
-             touch $DATA_FILE
-        fi
+    if [ ! -d $HOME/.sita ]; then
+        mkdir -p $HOME/.sita   
+        touch $DATA_FILE
+    fi
 }
 
 exit_err() 
@@ -186,6 +182,7 @@ _EOF_
 }
 
 ### MAIN ###
+trap "exit" SIGHUP SIGINT SIGTERM
 
 if [ -z "$1" ]; then
     usage
@@ -223,3 +220,4 @@ while [ "$1" != "" ]; do
     esac
     shift
 done
+### EOC ###
