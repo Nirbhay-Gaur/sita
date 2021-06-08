@@ -11,7 +11,7 @@
 
 ### CONSTANTS ###
 PROGNAME="$(basename $0)"
-DATA_FILE="$HOME/.$PROGNAME.data_file"
+DATA_FILE="$HOME/.sita/.$PROGNAME.data_file"
 EXCODE="$?"
 #RIGHT_NOW="$(date +"%x %r")"
 
@@ -38,10 +38,18 @@ init()
     for i in "${msg[@]}"; do
              clear
              echo "$i"
-             sleep 3
+             sleep 4
          done
-         touch $DATA_FILE
+         if [ ! -d $HOME/.sita ]; then
+             mkdir -p $HOME/.sita   
+             touch $DATA_FILE
+        fi
+}
 
+exit_err() 
+{
+    echo "$1" 1>&2
+    exit 1
 }
 
 confirm()
@@ -51,7 +59,7 @@ confirm()
         case $opt in 
             [Yy]* )  return 0;;
             [Nn]* )  return 1;;
-            *     )  echo "Err...answer in yes or no, dumbo!" 
+            *     )  echo "ERROR: Answer in yes or no" 1>&2 
         esac
     done
 }
@@ -67,7 +75,7 @@ add()
         fi
         echo "$task - has been added to your list."
     else 
-        echo -e "minions found an abnormality.\nRun sita -i to initiate the tool."
+        exit_err "ERROR: Minions found an abnormality: Run sita -i to initiate the tool"
     fi
     
 }
@@ -85,12 +93,12 @@ delete()
                     echo "Calm down! Nothing is deleted"
                 fi
             elif [ $(wc -l < $DATA_FILE) -eq "0" ]; then
-                echo "Your list is empty!"
+                exit_err "ERROR: Your list is empty!: Add task first"
             else 
-                echo "Entered id does not match"
+                exit_err "ERROR: ID does not match: Enter correct ID"
             fi
         else 
-            echo "Invalid input. Enter correct id" 
+            exit_err "ERROR: Invalid input: Enter correct ID" 
         fi
     }
     
@@ -102,7 +110,7 @@ delete()
             delete_check
         fi
     else 
-        echo -e "minions found an abnormality.\nRun sita -i to initiate the tool."
+        exit_err "ERROR: Minions found an abnormality: Run sita -i to initiate the tool"
     fi
 }
 
@@ -119,12 +127,12 @@ edit()
                     echo "Nothing's changed, You are still an ugly bitch."
                 fi
             elif [ $(wc -l < $DATA_FILE) -eq "0" ]; then
-                echo -e "Your list is empty!\nYou need to add task to edit them, stoopid!"
+                exit_err "ERROR: Your list is empty!: Add task first"
             else
-                echo "Entered id does not match"
+                exit_err "ERROR: ID does not match: Enter correct ID"
             fi
         else 
-            echo "Invalid input. Enter correct id" 
+            exit_err "ERROR: Invalid input: Enter correct ID" 
         fi
     }
 
@@ -137,7 +145,7 @@ edit()
             edit_check
         fi
     else 
-        echo -e "minions found an abnormality.\nRun sita -i to initiate the tool."
+        exit_err "ERROR: Minions found an abnormality: Run sita -i to initiate the tool"
     fi
 }
 
@@ -145,13 +153,13 @@ list()
 {
     if [ -f $DATA_FILE ]; then
         if [ $(wc -l < $DATA_FILE) -eq "0" ]; then 
-            echo "Nothing to display. No task available"
+            exit_err "ERROR: No task available: Nothing to display"
         else 
             printf "%6s %6s\n" "ID" "TASKS"
             cat -n $DATA_FILE
         fi
     else 
-        echo -e "minions found an abnormality.\nRun sita -i to initiate the tool."
+        exit_err "ERROR: Minions found an abnormality: Run sita -i to initiate the tool"
     fi
 }
 
@@ -161,21 +169,25 @@ usage()
 Usage: sita [OPTIONS]
 SITA, short for Simple Interactive Todo Application, is a tool to organize your day to day tasks with very easy to use interface.
 
-OPTIONS             DESCRIPTION                              EXAMPLE
--------             -----------                              -------
--a, --add           adds a task to todo list                 sita -a "feed my dog"
--d, --delete        deletes a task from todo list            sita -d [id]
--e, --edit          edits a task from todo list              sita -e [id] "walk my dog"
--h, --help          display this help and exit               sita -h
--l, --list          list all the task from todo list         sita -l   
-            
+    OPTIONS             DESCRIPTION                              EXAMPLE
+    -------             -----------                              -------
+    -a, --add           adds a task to todo list                 sita -a "feed my dog"
+    -d, --delete        deletes a task from todo list            sita -d [id]
+    -e, --edit          edits a task from todo list              sita -e [id] "walk my dog"
+    -h, --help          display this help and exit               sita -h
+    -l, --list          list all the task from todo list         sita -l   
+ 
+If you choose not to run single line commands as shown above, simply run:
+    sita [OPTIONS]
+
+Furthermore, SITA offers an interactive mode. To perform above tasks in interactive mode, just run: sita
+
 _EOF_
 }
 
 ### MAIN ###
 
 if [ -z "$1" ]; then
-#    init
     usage
 fi    
 
