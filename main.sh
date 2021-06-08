@@ -85,7 +85,9 @@ delete()
             else 
                 echo "Calm down! Nothing is deleted"
             fi
-        else
+        elif [ $(wc -l < $DATA_FILE) -eq "0" ]; then
+            echo "Your list is empty!"
+        else 
             echo "Entered id does not match"
         fi
     else 
