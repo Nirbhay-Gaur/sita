@@ -11,17 +11,38 @@
 
 ### CONSTANTS ###
 PROGNAME="$(basename $0)"
-DATA_FILE="./$PROGNAME.data_file"
+DATA_FILE="$HOME/.$PROGNAME.data_file"
 EXCODE="$?"
 #RIGHT_NOW="$(date +"%x %r")"
 
 ### VARIABLES ###
 task=
-id=
+_id=
 replace_text=
 opt=
 
 ### FUNCTIONS ###
+
+init() 
+{
+   declare -a msg=( 
+                "Waking up minions..."
+                "Assigning duties to minions..."
+                "Please wait while minions do their work..."
+                "We are working very hard...Really!"
+                "Feeding lazy minions to unicorns..."
+                "Grabbing extra minions..."
+                "Almost there, hold tight..."
+                "Tool initiated...All Good!"
+             )
+    for i in "${msg[@]}"; do
+             clear
+             echo "$i"
+             sleep 3
+         done
+         touch $DATA_FILE
+
+}
 
 confirm()
 {
@@ -39,7 +60,7 @@ add()
 {
     if [ -n "$task" ]; then
         echo "$task" >> $DATA_FILE
-    else 
+    else
         read -p "Enter task: " task
         echo "$task" >> $DATA_FILE
     fi
@@ -48,49 +69,75 @@ add()
 
 delete()
 {
-    if [[ "$id" =~ ^[0-9]+$ ]] && [ "$id" -ne "0" ]; then
-        if [ "$id" -le $(wc -l < $DATA_FILE) ]; then
-            if confirm; then
-                sed -i "${id}d" $DATA_FILE
-                echo "Task deleted successfully"
+    delete_check()
+    {
+        if [[ "$_id" =~ ^[0-9]+$ ]] && [ "$_id" -ne "0" ]; then
+            if [ "$_id" -le $(wc -l < $DATA_FILE) ]; then
+                if confirm; then
+                    sed -i "${_id}d" $DATA_FILE
+                    echo "Task deleted successfully"
+                else 
+                    echo "Calm down! Nothing is deleted"
+                fi
+            elif [ $(wc -l < $DATA_FILE) -eq "0" ]; then
+                echo "Your list is empty!"
             else 
-                echo "Calm down! Nothing is deleted"
+                echo "Entered id does not match"
             fi
-        elif [ $(wc -l < $DATA_FILE) -eq "0" ]; then
-            echo "Your list is empty!"
         else 
-            echo "Entered id does not match"
+            echo "Invalid input. Enter correct id" 
         fi
-    else 
-        echo "Invalid input. Enter correct id" 
+    }
+    
+    if [ -n "$_id" ]; then
+        delete_check
+    else
+        read -p "Enter ID of the task: " _id
+        delete_check
     fi
+
 }
 
 edit()
 {
-    if [[ "$id" =~ ^[0-9]+$ ]] && [ "$id" -ne "0" ]; then
-        if [ "$id" -le $(wc -l < $DATA_FILE) ]; then
-            if confirm; then
-                sed -i "${id}s/.*/${replace_text}/" $DATA_FILE
-                echo "Task updated successfully"
-            else 
-                echo "Nothing's changed, You are still an ugly bitch."
+    edit_check()
+    {
+        if [[ "$_id" =~ ^[0-9]+$ ]] && [ "$_id" -ne "0" ]; then
+            if [ "$_id" -le $(wc -l < $DATA_FILE) ]; then
+                if confirm; then
+                    sed -i "${_id}s/.*/${replace_text}/" $DATA_FILE
+                    echo "Task updated successfully"
+                else 
+                    echo "Nothing's changed, You are still an ugly bitch."
+                fi
+            else
+                echo "Entered id does not match"
             fi
-        else
-            echo "Entered id does not match"
+        else 
+            echo "Invalid input. Enter correct id" 
         fi
+    }
+
+    if [ -n "$_id" ]; then
+        edit_check
     else 
-        echo "Invalid input. Enter correct id" 
+        read -p "Enter ID of the task: " _id
+        read -p "Enter updated task: " replace_text
+        edit_check
     fi
 }
 
 list()
 {
-    if [ $(wc -l < $DATA_FILE) -eq "0" ]; then 
-        echo "Nothing to display. No task available"
+    if [ -f $DATA_FILE ]; then
+        if [ $(wc -l < $DATA_FILE) -eq "0" ]; then 
+            echo "Nothing to display. No task available"
+        else 
+            printf "%6s %6s\n" "ID" "TASKS"
+            cat -n $DATA_FILE
+        fi
     else 
-        printf "%6s %6s\n" "ID" "TASKS"
-        cat -n $DATA_FILE
+        echo "minions found an abnormality. Run sita -i to initiate the tool."
     fi
 }
 
@@ -126,17 +173,20 @@ while [ "$1" != "" ]; do
                                 exit
                                 ;;
         -d | --delete )         shift
-                                id="$1"
+                                _id="$1"
                                 delete
                                 exit
                                 ;;
         -e | --edit )           shift
-                                id="$1"
+                                _id="$1"
                                 replace_text="$2"
                                 edit
                                 exit
                                 ;;
         -h | --help )           usage
+                                exit
+                                ;;
+        -i | --init )           init
                                 exit
                                 ;;
         -l | --list )           list
