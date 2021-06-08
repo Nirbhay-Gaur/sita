@@ -18,7 +18,6 @@ EXCODE="$?"
 ### VARIABLES ###
 task=
 id=
-line_num=
 replace_text=
 opt=
 
@@ -115,7 +114,12 @@ edit()
 
 list()
 {
-    echo "#TODO"
+    if [ $(wc -l < $DATA_FILE) -eq "0" ]; then 
+        echo "Nothing to display. No task available"
+    else 
+        printf "%6s %6s\n" "ID" "TASKS"
+        cat -n $DATA_FILE
+    fi
 }
 
 usage()
