@@ -43,7 +43,6 @@ init()
 exit_err() 
 {
     echo "$1" 1>&2
-   #exit 1
 }
 
 confirm()
@@ -156,7 +155,7 @@ list()
             exit_err "ERROR: No task available: Nothing to display"
         else 
             printf "%6s %6s\n" "ID" "TASKS"
-            cat -n $DATA_FIL
+            cat -n $DATA_FILE
         fi
     else 
         exit_err "ERROR: Minions found an abnormality: Run sita -i to initiate the tool"
