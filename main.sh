@@ -188,7 +188,6 @@ _EOF_
 usage1()
 {
     cat <<- _EOF_
-
 SITA, short for Simple Interactive Todo Application, is a tool to organize your day to day tasks with very easy to use interface.
 
     OPTIONS      DESCRIPTION                    

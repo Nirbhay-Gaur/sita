@@ -35,18 +35,17 @@ fi
 mkdir -p $HOME/bin/
 if [ -f ./main.sh ]; then
         mkdir -p $HOME/.sita &&
-        cp * $HOME/.sita && 
-        cd $HOME/.sita && 
+        cp ./main.sh $HOME/.sita && 
+        cd $HOME/.sita
+        if [ -h sita ]; then
+            rm ./sita
+        fi
         ln -s main.sh sita && 
-        cp sita $HOME/bin/ &&
-        echo export PATH=$PATH:$HOME/bin/ >> $HOME/.bashrc &&
-        sleep 1 &&
-        source $HOME/.bashrc && 
-        sleep 1 &&
+        cp sita $HOME/.local/bin &&
         echo "SITA is successfully installed on your system..." &&
         sleep 3 &&
         echo "Initializing SITA..." &&
-        sleep 5 &&
+        sleep 3 &&
         sita -i
 else 
     echo "ERROR: Missing file: main.sh missing" 1>&2
