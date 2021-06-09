@@ -18,11 +18,10 @@ fi
 
 ### Main ###
 
-mkdir -p $HOME/bin/
 if [ -f ./main.sh ]; then
         mkdir -p $HOME/.sita &&
         cp ./main.sh $HOME/.sita && 
-        cd $HOME/.sita
+        cd $HOME/.sita &&
         chmod +x main.sh
         if [ -h sita ]; then
             rm ./sita
