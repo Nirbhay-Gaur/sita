@@ -1,4 +1,4 @@
-#!/bin/bash
+ #!/bin/bash
 #
 # SITA init file
 #
@@ -15,20 +15,6 @@ if is_root; then
     echo "Error: need to call this script as a normal user, not as root!" 
     exit 1
 fi
-
-#has_sudo() {
-#    local prompt
-#
-#    prompt=$(sudo -nv 2>&1)
-#    if [ $? -eq 0 ]; then
-#    return 0
-#    elif echo $prompt | grep -q '^sudo:'; then
-#    return 1
-#    else
-#    return 2
-#    fi
-#}
-#has_sudo
 
 ### Main ###
 

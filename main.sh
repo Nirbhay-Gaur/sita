@@ -156,7 +156,7 @@ list()
             exit_err "ERROR: No task available: Nothing to display"
         else 
             printf "%6s %6s\n" "ID" "TASKS"
-            cat -n $DATA_FILE
+            cat -n $DATA_FIL
         fi
     else 
         exit_err "ERROR: Minions found an abnormality: Run sita -i to initiate the tool"
@@ -283,4 +283,4 @@ while [ "$1" != "" ]; do
     esac
     shift
 done
-### EOC ###
+### EOP ###
