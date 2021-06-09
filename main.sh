@@ -8,14 +8,12 @@
 #
 
 ### CONSTANTS ###
-PROGNAME="$(basename $0)"
-DATA_FILE="$HOME/.sita/.$PROGNAME.data_file"
+DATA_FILE="$HOME/.sita/.sita.data_file"
 
 ### VARIABLES ###
 task=
 _id=
 replace_text=
-opt=
 
 ### FUNCTIONS ###
 
@@ -36,20 +34,22 @@ init()
              echo "$i"
              sleep 4
          done
-    if [ ! -d $HOME/.sita ]; then
-        mkdir -p $HOME/.sita   
-        touch $DATA_FILE
-    fi
+        mkdir -p $HOME/.sita  && 
+        touch $DATA_FILE      &&
+        echo "Run sita -h to know more"
+    
 }
 
 exit_err() 
 {
     echo "$1" 1>&2
-    exit 1
+   #exit 1
 }
 
 confirm()
 {
+    local opt=
+
     while true; do
         read -p "Are you sure? [y/n]: " opt 
         case $opt in 
@@ -62,7 +62,7 @@ confirm()
 
 add()
 {
-   if [ -f $DATA_FILE ]; then
+    if [ -f $DATA_FILE ]; then
         if [ -n "$task" ]; then
             echo "$task" >> $DATA_FILE
         else
@@ -70,10 +70,10 @@ add()
             echo "$task" >> $DATA_FILE
         fi
         echo "$task - has been added to your list."
+        task=
     else 
         exit_err "ERROR: Minions found an abnormality: Run sita -i to initiate the tool"
     fi
-    
 }
 
 delete()
@@ -105,9 +105,11 @@ delete()
             read -p "Enter ID of the task: " _id
             delete_check
         fi
+        _id=
     else 
         exit_err "ERROR: Minions found an abnormality: Run sita -i to initiate the tool"
     fi
+
 }
 
 edit()
@@ -140,6 +142,8 @@ edit()
             read -p "Enter updated task: " replace_text
             edit_check
         fi
+        _id=
+        replace_text=
     else 
         exit_err "ERROR: Minions found an abnormality: Run sita -i to initiate the tool"
     fi
@@ -181,42 +185,102 @@ Furthermore, SITA offers an interactive mode. To perform above tasks in interact
 _EOF_
 }
 
+usage1()
+{
+    cat <<- _EOF_
+
+SITA, short for Simple Interactive Todo Application, is a tool to organize your day to day tasks with very easy to use interface.
+
+    OPTIONS      DESCRIPTION                    
+    -------      -----------                     
+    add          adds a task to todo list        
+    delete       deletes a task from todo list   
+    edit         edits a task from todo list     
+    list         list all the task from todo list
+
+_EOF_
+}
+
+logo_anim()
+{
+ declare -a logo=(
+        "███████╗██╗████████╗ █████╗ "
+        "██╔════╝██║╚══██╔══╝██╔══██╗"
+        "███████╗██║   ██║   ███████║"
+        "╚════██║██║   ██║   ██╔══██║"
+        "███████║██║   ██║   ██║  ██║"
+        "╚══════╝╚═╝   ╚═╝   ╚═╝  ╚═╝"
+        "                            "
+        "Hello ${USER^}"
+    )
+
+    clear
+    echo ""
+    for i in "${logo[@]}"; do
+        sleep 0.2
+        echo "$i"
+    done
+    echo ""
+}
+
+run() 
+{
+    local resp=
+
+    logo_anim
+    usage1
+    while [ "$resp" != "quit" ]; do
+        read -p "> " resp
+        case $resp in
+            add    )     add;;
+            delete )     delete;;
+            edit   )     edit;;
+            list   )     list;;
+            quit   )     echo "Bye!";sleep 1;clear;exit;;
+            *      )     echo "ERROR: Invalid input" 1>&2
+        esac
+    done
+    clear
+
+}
+
+
 ### MAIN ###
 trap "exit" SIGHUP SIGINT SIGTERM
 
 if [ -z "$1" ]; then
-    usage
+    run
 fi    
 
 while [ "$1" != "" ]; do
     case $1 in
-        -a | --add )            shift
-                                task="$1"
-                                add
-                                exit
-                                ;;
-        -d | --delete )         shift
-                                _id="$1"
-                                delete
-                                exit
-                                ;;
-        -e | --edit )           shift
-                                _id="$1"
-                                replace_text="$2"
-                                edit
-                                exit
-                                ;;
-        -h | --help )           usage
-                                exit
-                                ;;
-        -i | --init )           init
-                                exit
-                                ;;
-        -l | --list )           list
-                                exit
-                                ;;
-        * )                     usage
-                                exit 1 
+        -a | --add    )             shift
+                                    task="$1"
+                                    add
+                                    exit
+                                    ;;
+        -d | --delete )             shift
+                                    _id="$1"
+                                    delete
+                                    exit
+                                    ;;
+        -e | --edit   )             shift
+                                    _id="$1"
+                                    replace_text="$2"
+                                    edit
+                                    exit
+                                    ;;
+        -h | --help   )             usage
+                                    exit
+                                    ;;
+        -i | --init   )             init
+                                    exit
+                                    ;;
+        -l | --list   )             list
+                                    exit
+                                    ;;
+        *             )             usage
+                                    exit 1 
     esac
     shift
 done
