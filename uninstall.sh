@@ -26,7 +26,7 @@ del_file()
 
 del_link()
 {
-    if [ -h "$HOME/.local/bin/sita" ]; then
+    if [ -f "$HOME/.local/bin/sita" ]; then
         rm -f "$HOME/.local/bin/sita"
         echo "Spinning violently around the y-axis..."
         sleep 3
@@ -40,8 +40,8 @@ del_link()
 
 ### MAIN ###
 
-del_file
 del_link
+del_file
 
 if [ "$c" -eq 0 ]; then
     clear
