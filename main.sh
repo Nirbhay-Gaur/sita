@@ -277,7 +277,7 @@ while [ "$1" != "" ]; do
         -l | --list   )             list
                                     exit
                                     ;;
-        *             )             usage
+        *             )             echo "Error: Invalid argument: Run sita -h for usage" 1>&2
                                     exit 1 
     esac
     shift
