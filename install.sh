@@ -27,7 +27,7 @@ if [ -f ./main.sh ]; then
             rm ./sita
         fi
         ln -s main.sh sita && 
-        cp sita $HOME/.local/bin &&
+        cp sita $HOME/.local/bin/sita &&
         echo "SITA is successfully installed on your system..." &&
         sleep 3 &&
         echo "Initializing SITA..." &&
