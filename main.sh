@@ -195,6 +195,9 @@ SITA, short for Simple Interactive Todo Application, is a tool to organize your 
     delete       deletes a task from todo list   
     edit         edits a task from todo list     
     list         list all the task from todo list
+    clear        clear screen 
+    quit         save and exit SITA
+    help         display this help section
 
 _EOF_
 }
@@ -230,12 +233,14 @@ run()
     while [ "$resp" != "quit" ]; do
         read -p "> " resp
         case $resp in
-            add    )     add;;
-            delete )     delete;;
-            edit   )     edit;;
-            list   )     list;;
-            quit   )     echo "Bye!";sleep 1;clear;exit;;
-            *      )     echo "ERROR: Invalid input" 1>&2
+            a | add    )     add;;
+            d | delete )     delete;;
+            e | edit   )     edit;;
+            l | list   )     list;;
+            c | clear  )     clear;;
+            q | quit   )     echo "Bye!";sleep 0.5;clear;exit;;
+            h | help   )     usage1;;
+                *      )     echo "ERROR: Invalid input" 1>&2
         esac
     done
     clear
@@ -282,4 +287,31 @@ while [ "$1" != "" ]; do
     esac
     shift
 done
-### EOP ###
+
+
+#             |\                         /|
+#             | \                       / |
+#             |  \                     /  |
+#             |   \   _,.-------.,_   /   |
+#             |   ,\~'             '~/,   |
+#             | ,;                     ;, |
+#             |;                         ;|
+#             |'         Damaged         '|
+#            ,;                           ;,
+#            ; ;      .           .      ; ;
+#            | ;   ______       ______   ; |
+#            |  `/~"     ~" . "~     "~\'  |
+#            |  ~  ,-~~~^~, | ,~^~~~-,  ~  |
+#             |   |        }:{        |   |
+#             |   l       / | \       !   |
+#             .~  (__,.--" .^. "--.,__)  ~.
+#             |     ---;' / | \ `;---     |
+#              \__.       \/^\/       .__/
+#               V| \                 / |V
+#                | |T~\___!___!___/~T| |
+#                | |`IIII_I_I_I_IIII'| |
+#                |  \,III I I I III,/  |
+#                 \   `~~~~~~~~~~'    /
+#                   \   .       .   /     
+#                     \.    ^    ./
+#                       ^~~~^~~~^
